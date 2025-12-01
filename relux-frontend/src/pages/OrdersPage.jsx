@@ -7,7 +7,7 @@ const OrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [showModal, setShowModal] = useState(false)
   
-  const API_BASE_URL = 'http://127.0.0.1:8000'
+  const API_BASE_URL = 'https://reloxapi.online'
 
   useEffect(() => {
     fetchOrders()
@@ -23,7 +23,7 @@ const OrdersPage = () => {
         throw new Error('Please login to view orders')
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/orders', {
+      const response = await fetch('https://reloxapi.online/api/orders', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const OrdersPage = () => {
   const fetchOrderDetails = async (orderId) => {
     try {
       const token = localStorage.getItem('auth_token')
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/${orderId}`, {
+      const response = await fetch(`https://reloxapi.online/api/orders/${orderId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
