@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { addToCart } from '../services/cartService'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://reloxapi.online/api'
+const API_URL ='https://reloxapi.online'
 
 function ShopPage({ searchQuery = '', filters = {}, isAuthenticated, onShowAuth, onCartUpdate }) {
   const [products, setProducts] = useState([])
