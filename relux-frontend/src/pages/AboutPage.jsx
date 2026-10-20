@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+const ABOUT_COLLECTION_IMAGES = [
+  '/images/relux1.webp',
+  '/images/relux2.webp',
+  '/images/relux3.webp',
+  '/images/relux4.webp',
+  '/images/relux11.webp',
+];
+
 const AboutPage = () => {
   const [heroTextSplit, setHeroTextSplit] = useState(0);
   const [valuesProgress, setValuesProgress] = useState(0);
@@ -15,15 +23,6 @@ const AboutPage = () => {
   const whyReluxSectionRef = useRef(null);
   const storyRef = useRef(null);
   
-  // Scroll lock state management
-  const scrollLockState = useRef({
-    isLocked: false,
-    lockedSection: null,
-    galleryProgress: 0,
-    whyReluxProgress: 0,
-    lastScrollTime: 0
-  });
-
   // Scroll to top on mount
   useEffect(() => {
     if (aboutWrapperRef.current) {
@@ -72,112 +71,58 @@ const AboutPage = () => {
     return () => wrapper.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // IMPROVED GALLERY SCROLL LOCK
+  // Gallery reveal follows the actual scroll position. This works for touch,
+  // trackpads, keyboards, and mouse wheels without trapping the user in a section.
   useEffect(() => {
     const gallerySection = gallerySectionRef.current;
     const wrapper = aboutWrapperRef.current;
     if (!gallerySection || !wrapper) return;
 
-    const handleWheel = (e) => {
+    let frame = 0;
+    const handleScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
       const rect = gallerySection.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      
-      // Check if section is in viewport (more generous range)
-      const isInViewport = rect.top < viewportHeight * 0.7 && rect.bottom > viewportHeight * 0.3;
-      
-      if (!isInViewport) return;
-
-      const state = scrollLockState.current;
-      const currentProgress = state.galleryProgress;
-      
-      // Check if animation is complete
-      const isComplete = currentProgress >= 100;
-      const isAtStart = currentProgress <= 0;
-      
-      // Determine if we should lock
-      const shouldLock = (!isComplete && e.deltaY > 0) || (!isAtStart && e.deltaY < 0);
-      
-      if (shouldLock) {
-        e.preventDefault();
-        
-        // Prevent scroll propagation
-        state.isLocked = true;
-        state.lockedSection = 'gallery';
-        
-        // Smoother increment (adjust sensitivity)
-        const increment = e.deltaY * 0.15; // Reduced from 0.15 for smoother control
-        const newProgress = Math.max(0, Math.min(100, currentProgress + increment));
-        
-        state.galleryProgress = newProgress;
-        setGalleryProgress(newProgress);
-        
-        // Release lock after animation completes
-        if (newProgress >= 100 || newProgress <= 0) {
-          setTimeout(() => {
-            state.isLocked = false;
-            state.lockedSection = null;
-          }, 300);
-        }
-      }
+      const progress = Math.max(0, Math.min(1,
+        (viewportHeight - rect.top) / (rect.height + viewportHeight * 0.35)
+      ));
+      setGalleryProgress(progress * 100);
+      });
     };
 
-    wrapper.addEventListener('wheel', handleWheel, { passive: false });
-    
+    wrapper.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => {
-      wrapper.removeEventListener('wheel', handleWheel);
-      scrollLockState.current.isLocked = false;
-      scrollLockState.current.lockedSection = null;
+      wrapper.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
     };
   }, []);
 
-  // IMPROVED WHY RELUX SCROLL LOCK
+  // The Why Relox cards use the same scroll-linked reveal instead of wheel-only logic.
   useEffect(() => {
     const whyReluxSection = whyReluxSectionRef.current;
     const wrapper = aboutWrapperRef.current;
     if (!whyReluxSection || !wrapper) return;
 
-    const handleWheel = (e) => {
+    let frame = 0;
+    const handleScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
       const rect = whyReluxSection.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      
-      // Check if section is in viewport
-      const isInViewport = rect.top < viewportHeight * 0.7 && rect.bottom > viewportHeight * 0.3;
-      
-      if (!isInViewport) return;
-
-      const state = scrollLockState.current;
-      const currentProgress = state.whyReluxProgress;
-      
-      const isComplete = currentProgress >= 100;
-      const isAtStart = currentProgress <= 0;
-      
-      const shouldLock = (!isComplete && e.deltaY > 0) || (!isAtStart && e.deltaY < 0);
-      
-      if (shouldLock) {
-        e.preventDefault();
-        
-        state.isLocked = true;
-        state.lockedSection = 'whyrelux';
-        
-        const increment = e.deltaY * 0.15;
-        const newProgress = Math.max(0, Math.min(100, currentProgress + increment));
-        
-        state.whyReluxProgress = newProgress;
-        setWhyReluxProgress(newProgress);
-        
-        if (newProgress >= 100 || newProgress <= 0) {
-          setTimeout(() => {
-            state.isLocked = false;
-            state.lockedSection = null;
-          }, 300);
-        }
-      }
+      const progress = Math.max(0, Math.min(1,
+        (viewportHeight - rect.top) / (rect.height + viewportHeight * 0.35)
+      ));
+      setWhyReluxProgress(progress * 100);
+      });
     };
 
-    wrapper.addEventListener('wheel', handleWheel, { passive: false });
-    
+    wrapper.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => {
-      wrapper.removeEventListener('wheel', handleWheel);
+      wrapper.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -222,9 +167,10 @@ const AboutPage = () => {
           }
         });
       },
-      { 
+      {
+        root: aboutWrapperRef.current,
         threshold: 0.15,
-        rootMargin: '0px 0px -80px 0px'
+        rootMargin: '0px 0px -10% 0px'
       }
     );
 
@@ -237,7 +183,13 @@ const AboutPage = () => {
       <div className="about-page">
         {/* 1. HERO WITH VIDEO */}
         <section className="hero-about-section" ref={heroAboutRef}>
-          <div className="hero-video-container">
+          <div
+            className="hero-video-container"
+            style={{
+              '--hero-parallax': `${heroTextSplit * 3}%`,
+              '--hero-scale': 1 + heroTextSplit * 0.06
+            }}
+          >
             <video 
               className="hero-video-bg" 
               autoPlay 
@@ -374,6 +326,12 @@ const AboutPage = () => {
                       transition: 'transform 0.3s ease, opacity 0.3s ease'
                     }}
                   >
+                    <img
+                      className="gallery-image"
+                      src={ABOUT_COLLECTION_IMAGES[i]}
+                      alt={`${item.name} timepiece`}
+                      loading="lazy"
+                    />
                     <div className="gallery-icon">{item.icon}</div>
                     <div className="gallery-name">{item.name}</div>
                   </div>
@@ -533,7 +491,7 @@ const AboutPage = () => {
         name: 'Jhyzie Cano', 
         role: 'President', 
         initial: 'JC',
-        image: 'public/media/jhy.jpg' // ✅ Add your image here
+        image: '/media/jhy.jpg' // ✅ Add your image here
       }
     ].map((member, i) => (
       <div key={i} className="team-card zoom-on-scroll" style={{ '--index': i }}>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
+
 /* ===== CRITICAL RESETS - MUST BE FIRST ===== */
 * {
   margin: 0;
@@ -16,9 +18,6 @@ body {
 }
 
 /* ===== INTRO VIDEO SECTION - FIXED VERSION ===== */
-
-/* Luxury typography */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap');
 
 /* ===== Video tuning knobs ===== */
 :root{
@@ -325,12 +324,12 @@ body {
 }
 
 /* Search container */
-.search-container {
+.intro-video-section .search-container {
   position: relative;
 }
 
-.intro-search-dropdown,
-.search-dropdown-modern {
+.intro-video-section .intro-search-dropdown,
+.intro-video-section .search-dropdown-modern {
   position: absolute;
   top: calc(100% + 1rem);
   right: -80px;
@@ -347,8 +346,8 @@ body {
   overflow-y: auto;
 }
 
-.intro-search-dropdown::before,
-.search-dropdown-modern::before {
+.intro-video-section .intro-search-dropdown::before,
+.intro-video-section .search-dropdown-modern::before {
   content: '';
   position: absolute;
   top: 0;
@@ -520,8 +519,8 @@ body {
     font-size: clamp(0.8rem, 1.4vw, 1rem);
   }
 
-  .intro-search-dropdown,
-  .search-dropdown-modern {
+  .intro-video-section .intro-search-dropdown,
+  .intro-video-section .search-dropdown-modern {
     width: 85vw;
     right: 50%;
     transform: translateX(50%);
@@ -584,8 +583,8 @@ body {
     height: 18px;
   }
 
-  .intro-search-dropdown,
-  .search-dropdown-modern {
+  .intro-video-section .intro-search-dropdown,
+  .intro-video-section .search-dropdown-modern {
     width: 100vw;
     right: 0;
     left: 0;

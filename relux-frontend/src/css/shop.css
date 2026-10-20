@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+
 :root {
   --primary-gold: #D4AF37;
   --secondary-gold: #FFD700;
@@ -9,8 +11,6 @@
   --shadow-hover: 0 12px 40px rgba(212, 175, 55, 0.2);
   --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
 
 * {
   box-sizing: border-box;

@@ -18,7 +18,6 @@ import ReloxFooter from './components/ReloxFooter'
 import CheckoutModal from './components/CheckoutModal'
 import OrderSuccessModal from './components/OrderSuccessModal'
 
-import './css/responsive-overrides.css'
 import './css/checkout-modal.css'
 import './css/order-success.css'
 import './css/popular-rolex.css'
@@ -34,6 +33,7 @@ import './css/shop.css'
 import './css/about.css'
 import './css/video-hero-feature.css'
 import './css/contact-redesigned.css'
+import './css/mobile-responsiveness.css'
 
 function App() {
   const [showAuth, setShowAuth] = useState(false)

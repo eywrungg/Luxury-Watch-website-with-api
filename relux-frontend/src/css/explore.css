@@ -6,8 +6,8 @@
 :root{
   --rx-ink: #0b0b0b;
   --rx-brd: rgba(17,24,39,.10);
-  --rx-gold:#fbbf24;
-  --rx-gold2:#f59e0b;
+  --rx-gold: #d4af37;
+  --rx-gold2: #f2cf68;
 
   /* If your header height changes, tweak this: */
   --header-h: 72px;

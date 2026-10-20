@@ -94,6 +94,19 @@ const Header = ({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [showSearch, showCart, openUser])
 
+  // A mobile search sheet owns scrolling while it is open, so the page behind
+  // it cannot drift underneath the search controls.
+  useEffect(() => {
+    if (!showSearch) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [showSearch])
+
   // Close mobile menu on window resize to desktop
   useEffect(() => {
     const handleResize = () => {
@@ -330,7 +343,19 @@ const Header = ({
               </button>
 
               {showSearch && (
-                <div className="search-dropdown-modern">
+                <>
+                  <button
+                    type="button"
+                    className="mobile-search-backdrop"
+                    aria-label="Close search"
+                    onClick={() => setShowSearch(false)}
+                  />
+                  <div
+                    className="search-dropdown-modern"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Search luxury timepieces"
+                  >
                   <div className="search-header-modern">
                     <div className="search-icon-wrapper">
                       <svg viewBox="0 0 24 24" width="24" height="24">
@@ -482,7 +507,8 @@ const Header = ({
                       ))}
                     </div>
                   </div>
-                </div>
+                  </div>
+                </>
               )}
             </div>
 

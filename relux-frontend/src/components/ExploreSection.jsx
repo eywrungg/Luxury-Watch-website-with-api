@@ -1,7 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
-const API_URL = 'http://127.0.0.1:8000/api'
+const API_URL = 'https://reloxapi.online/api'
+
+// Keep the Signature Collections section useful when the catalogue request is
+// unavailable. These are existing Relux assets, not placeholder imagery.
+const LOCAL_COLLECTIONS = [
+  { id: 'signature-01', title: 'Oceanic Reserve', subtitle: 'Relux - Dive Collection', image: '/images/relux1.webp', variant: 'default', speed: 0.12 },
+  { id: 'signature-02', title: 'Midnight Chronograph', subtitle: 'Relux - Performance Collection', image: '/images/relux2.webp', variant: 'tall', speed: 0.18 },
+  { id: 'signature-03', title: 'Heritage Classic', subtitle: 'Relux - Dress Collection', image: '/images/relux3.webp', variant: 'default', speed: 0.10 },
+  { id: 'signature-04', title: 'Metropolitan Steel', subtitle: 'Relux - Everyday Collection', image: '/images/relux4.webp', variant: 'wide', speed: 0.16 },
+  { id: 'signature-11', title: 'Golden Hour', subtitle: 'Relux - Statement Collection', image: '/images/relux11.webp', variant: 'default', speed: 0.14 },
+  { id: 'signature-12', title: 'Modern Precision', subtitle: 'Relux - Signature Collection', image: '/images/relux12.webp', variant: 'default', speed: 0.20 },
+]
+
+const localCollectionCards = () => LOCAL_COLLECTIONS.map(collection => ({
+  ...collection,
+  link: '#shop',
+}))
 
 /**
  * RELUX — Explore (third section)
@@ -61,12 +77,12 @@ export default function ExploreSection() {
         });
 
         console.log('Mapped Collections:', collections);
-        setCollections(collections);
+        setCollections(collections.length ? collections : localCollectionCards());
 
       } catch (error) {
         console.error('Error fetching collections:', error);
         console.error('Error details:', error.response?.data);
-        setCollections([]);
+        setCollections(localCollectionCards());
       } finally {
         setLoading(false);
       }
@@ -113,10 +129,10 @@ export default function ExploreSection() {
     const vis = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          document.addEventListener('scroll', onScroll, { passive: true })
+          window.addEventListener('scroll', onScroll, { passive: true })
           onScroll()
         } else {
-          document.removeEventListener('scroll', onScroll)
+          window.removeEventListener('scroll', onScroll)
         }
       },
       { threshold: 0.01 }
@@ -127,7 +143,7 @@ export default function ExploreSection() {
     return () => {
       io.disconnect()
       vis.disconnect()
-      document.removeEventListener('scroll', onScroll)
+      window.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(raf)
     }
   }, [collections])
